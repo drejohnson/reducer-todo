@@ -20,6 +20,7 @@ const reducer = (state, action) => {
     case 'CLEAR_TODO':
       return {
         ...state,
+        todos: action.payload.todos,
       };
     default:
       return state;
@@ -67,11 +68,20 @@ function App() {
     });
   };
 
+  const clearTodos = e => {
+    e.preventDefault();
+    const newTodos = state.todos.filter(todo => todo.completed !== true);
+    dispatch({
+      type: 'CLEAR_TODO',
+      payload: { todos: [...newTodos] },
+    });
+  };
+
   return (
     <>
       <GlobalStyles />
       <Wrapper>
-        <TodoForm addTodo={addTodo} />
+        <TodoForm addTodo={addTodo} clearTodos={clearTodos} />
         <TodoList todos={state.todos} markComplete={markComplete} />
       </Wrapper>
     </>
