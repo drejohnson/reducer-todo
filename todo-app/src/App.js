@@ -15,6 +15,7 @@ const reducer = (state, action) => {
     case 'COMPLETE_TODO':
       return {
         ...state,
+        todos: action.payload,
       };
     case 'CLEAR_TODO':
       return {
@@ -24,6 +25,12 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+`;
 
 function App() {
   const initialState = {
@@ -49,13 +56,24 @@ function App() {
     });
   };
 
+  const markComplete = id => {
+    const newTodos = [...state.todos];
+    newTodos
+      .filter(todo => todo.id === id)
+      .map(todo => (todo.completed = !todo.completed));
+    dispatch({
+      type: 'COMPLETE_TODO',
+      payload: newTodos,
+    });
+  };
+
   return (
     <>
       <GlobalStyles />
-      <div className='App'>
+      <Wrapper>
         <TodoForm addTodo={addTodo} />
-        <TodoList todos={state.todos} />
-      </div>
+        <TodoList todos={state.todos} markComplete={markComplete} />
+      </Wrapper>
     </>
   );
 }
