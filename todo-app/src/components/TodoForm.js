@@ -5,6 +5,7 @@ const Form = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 const Input = styled.input`
@@ -29,18 +30,16 @@ const Input = styled.input`
 
 const Button = styled.button`
   display: block;
-  width: 175px;
+  min-width: 175px;
   padding: 0.875rem 0;
   margin: 1rem 0;
   margin-left: 1rem;
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  background-color: #e5195f;
-  border: 0;
-  border-radius: 35px;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+  text-transform: uppercase;
+  background-color: white;
+  border: 3px solid indianred;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.02, 0.01, 0.47, 1);
   &:hover {
@@ -61,13 +60,11 @@ const TodoForm = ({ addTodo, clearTodos }) => {
     setNewTodo('');
   };
   return (
-    <div>
-      <Form onSubmit={handleSubmit}>
-        <Input type='text' value={newTodo} onChange={handleChange} />
-        <Button>Add</Button>
-        <Button onClick={clearTodos}>Clear Completed</Button>
-      </Form>
-    </div>
+    <Form onSubmit={handleSubmit}>
+      <Input type='text' value={newTodo} onChange={handleChange} />
+      <Button>Add</Button>
+      <Button onClick={clearTodos}>Clear Completed</Button>
+    </Form>
   );
 };
 
