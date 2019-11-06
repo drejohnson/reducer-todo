@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -17,7 +17,7 @@ const reducer = (state, action) => {
     case 'COMPLETE_TODO':
       return {
         ...state,
-        todos: action.payload,
+        todos: action.payload.todos,
       };
     case 'CLEAR_TODO':
       return {
@@ -39,11 +39,10 @@ const Wrapper = styled.div`
 
 function App() {
   const initialState = {
-    todos: [
+    todos: JSON.parse(localStorage.getItem('todos')) || [
       {
         item: 'Learn about reducers',
         completed: false,
-        completedAt: null,
         id: Date.now(),
       },
     ],
@@ -55,27 +54,26 @@ function App() {
       id: Date.now(),
       item: title,
       completed: false,
+      completedAt: null,
     };
     dispatch({
       type: 'ADD_TODO',
       payload: { todos: [...state.todos, newTodo] },
     });
+    localStorage.setItem('todos', JSON.stringify(state.todos));
   };
 
   const markComplete = id => {
     const newTodos = [...state.todos];
+    newTodos
+      .filter(todo => todo.id === id)
+      .map(todo => {
+        todo.completed = !todo.completed;
+        todo.completedAt = dayjs().format('MMMM D, YYYY h:mm A');
+      });
     dispatch({
       type: 'COMPLETE_TODO',
-      payload: newTodos
-        .filter(todo => todo.id === id)
-        .map(todo => {
-          const newTodo = {
-            ...todo,
-            completed: true,
-            completedAt: dayjs().fromNow(),
-          };
-          return newTodo;
-        }),
+      payload: { todos: newTodos },
     });
   };
 
@@ -86,11 +84,13 @@ function App() {
       type: 'CLEAR_TODO',
       payload: { todos: [...newTodos] },
     });
+    localStorage.setItem('todos', JSON.stringify(state.todos));
   };
 
   useEffect(() => {
     dayjs.extend(relativeTime);
-  }, []);
+    localStorage.setItem('todos', JSON.stringify(state.todos));
+  }, [state]);
 
   return (
     <>

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components/macro';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,7 +16,12 @@ const Wrapper = styled.div`
   }
 `;
 
+dayjs.extend(relativeTime);
+
 const Todo = ({ todo: { id, item, completed, completedAt }, markComplete }) => {
+  useEffect(() => {
+    dayjs.extend(relativeTime);
+  }, [completedAt, completed, markComplete]);
   return (
     <Wrapper>
       <li
@@ -23,7 +30,7 @@ const Todo = ({ todo: { id, item, completed, completedAt }, markComplete }) => {
       >
         {item}
       </li>
-      {completedAt && <span>completed: {completedAt}</span>}
+      {completed && <span>completed: {dayjs().to(dayjs(completedAt))}</span>}
     </Wrapper>
   );
 };
