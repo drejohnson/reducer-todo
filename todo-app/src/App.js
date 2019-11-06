@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -50,8 +50,6 @@ function App() {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [timeCompleted, setTimeCompleted] = useState(dayjs());
-
   const addTodo = title => {
     const newTodo = {
       id: Date.now(),
@@ -66,18 +64,6 @@ function App() {
 
   const markComplete = id => {
     const newTodos = [...state.todos];
-    // newTodos
-    //   .filter(todo => todo.id === id)
-    //   .map(todo => {
-    //     const newTodo = {
-    //       ...todo,
-    //       completed: true,
-    //       completedAt: dayjs().fromNow(),
-    //     };
-    //     console.log('newTodo', newTodo);
-    //     return [...newTodos, newTodo];
-    //   });
-    console.log('newTodos', newTodos);
     dispatch({
       type: 'COMPLETE_TODO',
       payload: newTodos
@@ -88,7 +74,6 @@ function App() {
             completed: true,
             completedAt: dayjs().fromNow(),
           };
-          console.log('newTodo', newTodo);
           return newTodo;
         }),
     });
@@ -105,9 +90,6 @@ function App() {
 
   useEffect(() => {
     dayjs.extend(relativeTime);
-    // let now = dayjs();
-    console.log(timeCompleted.fromNow());
-    // console.log(now.toDate().format(`MM/DD/YY`));
   }, []);
 
   return (
