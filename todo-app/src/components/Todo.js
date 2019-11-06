@@ -1,13 +1,30 @@
 import React from 'react';
+import styled from 'styled-components/macro';
 
-const Todo = ({ todo: { id, item, completed }, markComplete }) => {
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 1rem;
+
+  span {
+    color: #666;
+    font-size: 0.875rem;
+    margin-left: 1rem;
+  }
+`;
+
+const Todo = ({ todo: { id, item, completed, completedAt }, markComplete }) => {
   return (
-    <li
-      style={{ textDecoration: completed ? 'line-through' : 'none' }}
-      onClick={() => markComplete(id)}
-    >
-      {item}
-    </li>
+    <Wrapper>
+      <li
+        style={{ textDecoration: completed ? 'line-through' : 'none' }}
+        onClick={() => markComplete(id)}
+      >
+        {item}
+      </li>
+      {completedAt && <span>completed: {completedAt}</span>}
+    </Wrapper>
   );
 };
 

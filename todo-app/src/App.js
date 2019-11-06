@@ -1,5 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import styled from 'styled-components/macro';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import GlobalStyles from './styles/GlobalStyles';
 import TodoForm from './components/TodoForm';
@@ -41,11 +43,14 @@ function App() {
       {
         item: 'Learn about reducers',
         completed: false,
+        completedAt: null,
         id: Date.now(),
       },
     ],
   };
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const [timeCompleted, setTimeCompleted] = useState(dayjs());
 
   const addTodo = title => {
     const newTodo = {
@@ -61,12 +66,31 @@ function App() {
 
   const markComplete = id => {
     const newTodos = [...state.todos];
-    newTodos
-      .filter(todo => todo.id === id)
-      .map(todo => (todo.completed = !todo.completed));
+    // newTodos
+    //   .filter(todo => todo.id === id)
+    //   .map(todo => {
+    //     const newTodo = {
+    //       ...todo,
+    //       completed: true,
+    //       completedAt: dayjs().fromNow(),
+    //     };
+    //     console.log('newTodo', newTodo);
+    //     return [...newTodos, newTodo];
+    //   });
+    console.log('newTodos', newTodos);
     dispatch({
       type: 'COMPLETE_TODO',
-      payload: newTodos,
+      payload: newTodos
+        .filter(todo => todo.id === id)
+        .map(todo => {
+          const newTodo = {
+            ...todo,
+            completed: true,
+            completedAt: dayjs().fromNow(),
+          };
+          console.log('newTodo', newTodo);
+          return newTodo;
+        }),
     });
   };
 
@@ -78,6 +102,13 @@ function App() {
       payload: { todos: [...newTodos] },
     });
   };
+
+  useEffect(() => {
+    dayjs.extend(relativeTime);
+    // let now = dayjs();
+    console.log(timeCompleted.fromNow());
+    // console.log(now.toDate().format(`MM/DD/YY`));
+  }, []);
 
   return (
     <>
